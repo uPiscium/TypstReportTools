@@ -1,9 +1,7 @@
-#import "../lib.typ": mysetting, showCode, itembox
+#import "../lib.typ": showCode, itembox, style, cmd
 
 // 個人用設定の読み込み
-#show: mysetting
-// 設定の上書き
-#set par(first-line-indent: 0em)
+#show: style
 
 // tips: コードブロック内の日本語のフォント指定方法
 // font: (日本語以外のフォント, 日本語のフォント) で指定
@@ -24,7 +22,7 @@
 関数指定で表示(`caption`属性で説明を付けられる)
 #Code("./main.py", func: "add", caption: "add関数")
 
-"差分を指定(初期値は`(-1, 0)`となっており端の空行は表示されない)
+差分を指定(初期値は`(-1, 0)`となっており端の空行は表示されない)
 #Code("./main.py", func: "mul", diff: (-2, 1))
 
 `showlines`を`true`にすると端の空行も表示される
@@ -37,9 +35,11 @@
 #Code("./main.py", range: (1, 2))
 
 == 特殊な指定
-
 #raw("funcに__main__を指定すると if __name__ == \"__main__\"部分が出力される")
 #Code("./main.py", func: "__main__")
+
+=== テスト
+#cmd("python3 main.py")
 
 == 注意点
 
@@ -75,7 +75,7 @@ Latexのアイテムボックスのようなものを表示する関数
   radius: 10pt,
   inset: 12pt
 )[
-  Typstについて調べ、Latexと比較せよ
+  Typstについて調べ, Latexと比較せよ
 ]
 
 `caption`の横の空白サイズを変更
@@ -102,5 +102,5 @@ Latexのアイテムボックスのようなものを表示する関数
 
 == 注意点
 
-力技で実装したため、文字サイズは6ptから30ptを想定しているのでこれを超えると`caption`がずれる\
+力技で実装したため, 文字サイズは6ptから30ptを想定しているのでこれを超えると`caption`がずれる\
 `caption`の調整をうまく関数化してどんな文字サイズにも対応させたい

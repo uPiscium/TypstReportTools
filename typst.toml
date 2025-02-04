@@ -1,7 +1,7 @@
 [package]
-name = "report-tools"
+name = "typst-report-tools"
 version = "0.1.0"
 entrypoint = "lib.typ"
-authors = ["Kitashimauni"]
+authors = ["Kitashimauni", "uPiscium"]
 license = "MIT"
 description = "Functions for report"

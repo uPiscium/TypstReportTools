@@ -1,39 +1,34 @@
 #import "@preview/codelst:2.0.1": sourcefile
 
-// label関数の短縮形
-#let l(arg) = { label(arg) }
-
-// 小見出しを表示する関数
+// Show subheading
 #let subheading(it, size: 11pt) = {
   par(first-line-indent: 0em)[
-    #text(font: "Meiryo", size: size)[*#it*]
+    #text(font: "Noto Serif JP", size: size)[*#it*]
   ]
 }
 
-// TODOを強調表示する関数
+// Show attention to TODO
 #let todo(it) = {
-  text(lang: "ja", font: ("Century", "Meiryo"), fill: red)[*TODO:* *#it*]
+  text(lang: "ja", font: ("CaskaydiaCove NF", "Noto Serif JP"), fill: red)[*TODO:* *#it*]
 }
 
-// spaceをn個入れる関数
-#let spaces(n) = {$space$*n}
-#let space2 = spaces(2)
-#let space3 = spaces(3)
-#let space4 = spaces(4)
-
-// レポート用の個人用設定
-#let mysetting(doc) = [
-  // テキスト関連の設定 //
-  // デフォルト値
+// Default style for document
+#let style(doc) = [
+  // Text (body)
   #set text(
     lang: "ja",
-    font: ("Century", "MS Mincho"),
-    size: 10.5pt,
+    font: ("CaskaydiaCove NF", "Noto Serif JP"),
+    size: 10.5pt
   )
+
+  // Paragraph
   #set par(
     first-line-indent: 1em,
     justify: true,
+    leading: 1.5em
   )
+
+  // Heading
   #set heading(
     numbering: (..args) => {
       let nums = args.pos()
@@ -44,44 +39,36 @@
       }
     }
   )
-  #show heading.where(level: 1): set text(lang: "ja", font: ("Century", "MS Gothic"), size: 12pt)
-  #show heading.where(level: 2): set text(lang: "ja", font: ("Century", "MS Gothic"), size: 11pt)
-  #show heading.where(level: 3): set text(lang: "ja", font: ("Century", "MS Gothic"), size: 11pt) 
   #show heading: it => {
+    set text(font:("CaskaydiaCove NF", "Noto Sans JP"))
     it
-    par(text(size: 0em, ""))
   }
-  
-  // コードブロック用
-  #show raw: set text(lang: "ja", font: ("Consolas", "MS Mincho"), size: 10.5pt)
+  #show heading.where(level: 1): set text(size: 18pt)
+  #show heading.where(level: 2): set text(size: 15pt)
+  #show heading.where(level: 3): set text(size: 12pt)
 
-  // 図表関連の設定 //
+  // Figure and Table
   #show figure.where(kind: table): set figure.caption(position: top)
   #set grid(column-gutter: 10pt, row-gutter: 10pt)
 
-  // 参照の設定
-  #show ref: it => {
-    let eq = heading
-    let el = it.element
-    if el != none and el.func() == eq {
-      // Override equation references.
-      let numbers = ("章", "節", "項")
-      let target = counter(eq).at(el.location())
-      let target_str = target.map(str)
-      text[#target_str.join(".")#numbers.at(target.len() - 1)]
-    } else {
-      // Other references as usual.
-      it
-    }
+  // Code block
+  #show raw: set text(lang: "ja", font: ("CaskaydiaCove NF", "Noto Serif JP"), size: 10.5pt)
+
+  #let tbl(tbl, caption: "") = {
+    figure(tbl, caption: caption, supplement: "表")
   }
 
-  // 便利系 //
-  // 小見出し
+  #let fig(fig, caption: "") = {
+    figure(fig, caption: caption, supplement: "図")
+  }
+
+  // Regex for subheading
   #let subheading_md = "-=-"
   #show regex("^" + subheading_md + " (.*)$"): it => {
     subheading(str(it.text).slice(subheading_md.len()+1))
   }
-  // TODO強調
+
+  // Regex for TODO
   #let todo_md = "(TODO|todo)"
   #show regex(todo_md + " \S*"): it => {
     todo(str(it.text).slice(4+1))
@@ -90,7 +77,7 @@
   #doc
 ]
 
-// ソースファイルからコードを挿入する関数(関数指定, クラス指定は現在pythonのみ対応)
+// Import specific code block from file
 #let showCode(
   code, 
   file,
@@ -135,7 +122,7 @@
   ]
 }
 
-// itembox的なもの(6ptから30pt程度を想定) いづれ改修するかも
+// Show itembox like LaTeX
 #let itembox(
   caption: none,
   space: 0pt,
@@ -199,6 +186,3 @@
   ]
 ]
 
-#let cmd(cmd) = {
-  box(raw(cmd), stroke: 0.5pt, inset: 0.5pt, outset: 2.5pt, radius: 4pt, fill: rgb(230, 230, 230))
-}
